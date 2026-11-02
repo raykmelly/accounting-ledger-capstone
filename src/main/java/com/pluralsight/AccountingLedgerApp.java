@@ -235,9 +235,10 @@ public class AccountingLedgerApp {
 
     // Displays home screen info & get response
     public static void homeScreen(Scanner scanner) {
-        // Display the home screen options and get a response
+        // Main app loop, once it breaks the app is done
         boolean appRunning = true;
         while (appRunning) {
+            // Display the home screen options and get a response
             System.out.println();
             System.out.println("[HOME SCREEN]");
             System.out.println("D.) Add deposit");
