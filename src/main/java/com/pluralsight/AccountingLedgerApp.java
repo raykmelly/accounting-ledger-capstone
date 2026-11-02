@@ -23,13 +23,50 @@ public class AccountingLedgerApp {
                 addDebit(scanner);
             } else if (response.equalsIgnoreCase("L")) {
                 // Display ledger
-
+                ledgerScreen(scanner);
             } else if (response.equalsIgnoreCase("X")) {
                 // Exit program
                 appRunning = false;
             } else {
                 // Invalid input
                 System.out.println("-> Invalid input, please try again");
+            }
+        }
+    }
+
+    // Loads the ledger screen until you choose to go to home screen
+    public static void ledgerScreen(Scanner scanner) {
+        boolean running = true;
+        while (running) {
+            System.out.println();
+            System.out.println("[LEDGER SCREEN");
+            System.out.println("A.) Display all entries");
+            System.out.println("D.) Display deposits (+)");
+            System.out.println("P.) Display payments (-)");
+            System.out.println("R.) Reports");
+            System.out.println("H.) Home");
+
+            System.out.println("-> Choose an option: ");
+            String response = scanner.nextLine();
+
+            if (response.equalsIgnoreCase("A")) {
+                // Display all entries
+
+            } else if (response.equalsIgnoreCase("D")) {
+                // Display deposit entries
+
+            } else if (response.equalsIgnoreCase("P")) {
+                // Display payment entries
+
+            } else if (response.equalsIgnoreCase("R")) {
+                // Go to reports screen
+
+            } else if (response.equalsIgnoreCase("H")) {
+                // Go back to home screen
+                running = false;
+            } else {
+                // Invalid input, try again
+                System.out.println("Error: Invalid input, try again");
             }
         }
     }
@@ -48,7 +85,7 @@ public class AccountingLedgerApp {
 
         double amount;
         while (true) {
-            System.out.println("-> Enter amount: ");
+            System.out.println("-> Enter amount (-): ");
             amount = scanner.nextDouble();
 
             // Re-prompt if the user tries to have a negative value
@@ -79,7 +116,7 @@ public class AccountingLedgerApp {
 
         double amount;
         while (true) {
-            System.out.println("-> Enter amount: ");
+            System.out.println("-> Enter amount (+): ");
             amount = scanner.nextDouble();
 
             // Re-prompt if the user tries to have a negative value
@@ -116,6 +153,7 @@ public class AccountingLedgerApp {
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
+        System.out.println();
     }
 
     // Displays home screen info & get response
