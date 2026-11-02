@@ -10,26 +10,10 @@ public class AccountingLedgerApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        boolean appRunning = true;
-        while (appRunning) {
-            String response = homeScreen(scanner);
-            if (response.equalsIgnoreCase("D")) {
-                // Add a deposit
-                addDeposit(scanner);
-            } else if (response.equalsIgnoreCase("P")) {
-                // Make payment (debit)
-                addDebit(scanner);
-            } else if (response.equalsIgnoreCase("L")) {
-                // Display ledger
-                ledgerScreen(scanner);
-            } else if (response.equalsIgnoreCase("X")) {
-                // Exit program
-                appRunning = false;
-            } else {
-                // Invalid input
-                System.out.println("-> Invalid input, please try again");
-            }
-        }
+        // Starts the app loop. Goes on until you exit from the home screen
+        homeScreen(scanner);
+
+        scanner.close();
     }
 
     // Displays every entry inside of transactions.csv
@@ -84,6 +68,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // The reports screen, where the user can run reports or custom search
     public static void reportsScreen(Scanner scanner) {
         boolean running = true;
         while (running) {
@@ -98,6 +83,7 @@ public class AccountingLedgerApp {
 
             System.out.println("-> Choose an option: ");
             int response = scanner.nextInt();
+            scanner.nextLine();
 
             if (response == 1) {
                 // Month to date
@@ -150,13 +136,14 @@ public class AccountingLedgerApp {
                 displayPayments();
             } else if (response.equalsIgnoreCase("R")) {
                 // Go to reports screen
-
+                reportsScreen(scanner);
             } else if (response.equalsIgnoreCase("H")) {
                 // Go back to home screen
                 running = false;
             } else {
                 // Invalid input, try again
                 System.out.println("Error: Invalid input, try again");
+                System.out.println("You entered: '" + response + "'");
             }
         }
     }
@@ -247,15 +234,35 @@ public class AccountingLedgerApp {
     }
 
     // Displays home screen info & get response
-    public static String homeScreen(Scanner scanner) {
+    public static void homeScreen(Scanner scanner) {
         // Display the home screen options and get a response
-        System.out.println("[HOME SCREEN]");
-        System.out.println("D.) Add deposit");
-        System.out.println("P.) Make payment (debit)");
-        System.out.println("L.) Display ledger");
-        System.out.println("X.) Exit");
-        System.out.println("-> Choose an option: ");
+        boolean appRunning = true;
+        while (appRunning) {
+            System.out.println();
+            System.out.println("[HOME SCREEN]");
+            System.out.println("D.) Add deposit");
+            System.out.println("P.) Make payment (debit)");
+            System.out.println("L.) Display ledger");
+            System.out.println("X.) Exit");
+            System.out.println("-> Choose an option: ");
 
-        return scanner.nextLine().trim();
+            String response = scanner.nextLine().trim();
+            if (response.equalsIgnoreCase("D")) {
+                // Add a deposit
+                addDeposit(scanner);
+            } else if (response.equalsIgnoreCase("P")) {
+                // Make payment (debit)
+                addDebit(scanner);
+            } else if (response.equalsIgnoreCase("L")) {
+                // Display ledger
+                ledgerScreen(scanner);
+            } else if (response.equalsIgnoreCase("X")) {
+                // Exit program
+                appRunning = false;
+            } else {
+                // Invalid input
+                System.out.println("-> Invalid input, please try again");
+            }
+        }
     }
 }
