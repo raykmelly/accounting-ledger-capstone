@@ -32,6 +32,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Displays every entry inside of transactions.csv
     public static void displayAllEntries() {
         System.out.println();
         System.out.println("[ALL TRANSACTION INFO]");
@@ -45,6 +46,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Displays all the deposit entries in transactions.csv
     public static void displayDeposits() {
         System.out.println();
         System.out.println("[DEPOSIT TRANSACTION INFO]");
@@ -63,6 +65,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Displays all the payments / debit entries in transactions.csv
     public static void displayPayments() {
         System.out.println();
         System.out.println("[PAYMENT TRANSACTION INFO]");
@@ -78,6 +81,46 @@ public class AccountingLedgerApp {
             }
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    public static void reportsScreen(Scanner scanner) {
+        boolean running = true;
+        while (running) {
+            System.out.println();
+            System.out.println("[REPORTS SCREEN]");
+            System.out.println("1.) Month to date");
+            System.out.println("2.) Previous month");
+            System.out.println("3.) Year to date");
+            System.out.println("4.) Previous year");
+            System.out.println("5.) Search by vendor name");
+            System.out.println("0.) Back");
+
+            System.out.println("-> Choose an option: ");
+            int response = scanner.nextInt();
+
+            if (response == 1) {
+                // Month to date
+
+            } else if (response == 2) {
+                // Previous month
+
+            } else if (response == 3) {
+                // Year to date
+
+            } else if (response == 4) {
+                // Previous year
+
+            } else if (response == 5) {
+                // Vendor name
+
+            } else if (response == 0) {
+                // Go back to ledger screen
+                running = false;
+            } else {
+                // Invalid input, try again
+                System.out.println("Error: Invalid input, try again");
+            }
         }
     }
 
