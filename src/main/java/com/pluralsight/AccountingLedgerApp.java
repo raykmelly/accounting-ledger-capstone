@@ -47,7 +47,7 @@ public class AccountingLedgerApp {
 
     public static void displayDeposits() {
         System.out.println();
-        System.out.println("[ALL TRANSACTION INFO]");
+        System.out.println("[DEPOSIT TRANSACTION INFO]");
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -55,6 +55,24 @@ public class AccountingLedgerApp {
                 double amount = Double.parseDouble(split[4]);
                 if (amount > 0) {
                     // Amount is positive, MUST be a deposit
+                    System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    public static void displayPayments() {
+        System.out.println();
+        System.out.println("[PAYMENT TRANSACTION INFO]");
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] split = line.split("\\|");
+                double amount = Double.parseDouble(split[4]);
+                if (amount < 0) {
+                    // Amount is negative, MUST be a debit / payment
                     System.out.println(line);
                 }
             }
@@ -86,7 +104,7 @@ public class AccountingLedgerApp {
                 displayDeposits();
             } else if (response.equalsIgnoreCase("P")) {
                 // Display payment entries
-
+                displayPayments();
             } else if (response.equalsIgnoreCase("R")) {
                 // Go to reports screen
 
