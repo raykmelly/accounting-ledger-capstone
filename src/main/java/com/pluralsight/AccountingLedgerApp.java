@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
+    // Application main loop
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -19,7 +20,7 @@ public class AccountingLedgerApp {
                 addDeposit(scanner);
             } else if (response.equalsIgnoreCase("P")) {
                 // Make payment (debit)
-
+                addDebit(scanner);
             } else if (response.equalsIgnoreCase("L")) {
                 // Display ledger
 
@@ -33,8 +34,40 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Adds a debit (-) to the transactions.csv
+    public static void addDebit(Scanner scanner) {
+        // Prompt user to create debit entry in transactions.csv
+        System.out.println();
+        System.out.println("[ADD DEBIT]");
+
+        System.out.println("-> Enter deposit description: ");
+        String desc = scanner.nextLine().trim();
+
+        System.out.println("-> Enter vendor: ");
+        String vendor = scanner.nextLine().trim();
+
+        double amount;
+        while (true) {
+            System.out.println("-> Enter amount: ");
+            amount = scanner.nextDouble();
+
+            // Re-prompt if the user tries to have a negative value
+            // because deposits MUST be positive
+            if (amount > 0) {
+                System.out.println("Error: debit amount must be negative\n");
+            } else {
+                break;
+            }
+        }
+
+        scanner.nextLine();
+        // Write deposit into transactions.csv
+        writeTransaction(desc,vendor,amount);
+    }
+
+    // Adds a deposit (+) to transactions.csv
     public static void addDeposit(Scanner scanner) {
-        // Prompt for input to create deposit entry in transactions.csv
+        // Prompt user to create deposit entry in transactions.csv
         System.out.println();
         System.out.println("[ADD DEPOSIT]");
 
@@ -44,14 +77,26 @@ public class AccountingLedgerApp {
         System.out.println("-> Enter vendor: ");
         String vendor = scanner.nextLine().trim();
 
-        System.out.println("-> Enter amount: ");
-        double amount = scanner.nextDouble();
+        double amount;
+        while (true) {
+            System.out.println("-> Enter amount: ");
+            amount = scanner.nextDouble();
+
+            // Re-prompt if the user tries to have a negative value
+            // because deposits MUST be positive
+            if (amount < 0) {
+                System.out.println("Error: deposit amount must be positive");
+            } else {
+                break;
+            }
+        }
 
         scanner.nextLine();
         // Write deposit into transactions.csv
         writeTransaction(desc,vendor,amount);
     }
 
+    // Writes to the transactions.csv file
     public static void writeTransaction(String desc, String vendor, double amount) {
         // Create the string that will be appended to the transactions.csv file
         System.out.println("-> Adding to transactions.csv");
@@ -73,6 +118,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Displays home screen info & get response
     public static String homeScreen(Scanner scanner) {
         // Display the home screen options and get a response
         System.out.println("[HOME SCREEN]");
