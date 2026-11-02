@@ -1,8 +1,6 @@
 package com.pluralsight;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -34,12 +32,43 @@ public class AccountingLedgerApp {
         }
     }
 
-    // Loads the ledger screen until you choose to go to home screen
+    public static void displayAllEntries() {
+        System.out.println();
+        System.out.println("[ALL TRANSACTION INFO]");
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    public static void displayDeposits() {
+        System.out.println();
+        System.out.println("[ALL TRANSACTION INFO]");
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] split = line.split("\\|");
+                double amount = Double.parseDouble(split[4]);
+                if (amount > 0) {
+                    // Amount is positive, MUST be a deposit
+                    System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    // Loads the ledger screen until you choose to go to the home screen
     public static void ledgerScreen(Scanner scanner) {
         boolean running = true;
         while (running) {
             System.out.println();
-            System.out.println("[LEDGER SCREEN");
+            System.out.println("[LEDGER SCREEN]");
             System.out.println("A.) Display all entries");
             System.out.println("D.) Display deposits (+)");
             System.out.println("P.) Display payments (-)");
@@ -51,10 +80,10 @@ public class AccountingLedgerApp {
 
             if (response.equalsIgnoreCase("A")) {
                 // Display all entries
-
+                displayAllEntries();
             } else if (response.equalsIgnoreCase("D")) {
                 // Display deposit entries
-
+                displayDeposits();
             } else if (response.equalsIgnoreCase("P")) {
                 // Display payment entries
 
