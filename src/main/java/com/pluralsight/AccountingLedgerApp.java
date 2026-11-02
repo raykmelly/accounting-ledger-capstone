@@ -11,7 +11,7 @@ public class AccountingLedgerApp {
             String response = homeScreen(scanner);
             if (response.equalsIgnoreCase("D")) {
                 // Add a deposit
-
+                addDeposit(scanner);
             } else if (response.equalsIgnoreCase("P")) {
                 // Make payment (debit)
 
@@ -28,13 +28,31 @@ public class AccountingLedgerApp {
         }
     }
 
+    public static void addDeposit(Scanner scanner) {
+        // Prompt for input to create deposit entry in transactions.csv
+        System.out.println();
+        System.out.println("[ADD DEPOSIT]");
+        System.out.println("-> Enter deposit description: ");
+        String desc = scanner.nextLine().trim();
+        System.out.println("-> Enter vendor: ");
+        String vendor = scanner.nextLine().trim();
+        System.out.println("-> Enter amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+    }
+
+    public static void writeTransaction(String desc, String vendor, double amount) {
+        // Write to the transactions.csv file
+    }
+
     public static String homeScreen(Scanner scanner) {
         // Display the home screen options and get a response
+        System.out.println("[HOME SCREEN]");
         System.out.println("D.) Add deposit");
         System.out.println("P.) Make payment (debit)");
         System.out.println("L.) Display ledger");
         System.out.println("X.) Exit");
-        System.out.println("-> Choose an option");
+        System.out.println("-> Choose an option: ");
 
         return scanner.nextLine().trim();
     }
