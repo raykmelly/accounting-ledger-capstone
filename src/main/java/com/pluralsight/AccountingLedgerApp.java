@@ -121,6 +121,21 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Display every transaction from the previous year
+    public static void displayPrevYear(ArrayList<Transaction> transactions) {
+        System.out.println();
+        System.out.println("[PREVIOUS YEAR]");
+
+        int prevYear = LocalDate.now().minusYears(1).getYear();
+
+        for (Transaction t : transactions) {
+            int transactionYear = t.getDate().getYear();
+            if (transactionYear == prevYear) {
+                System.out.println(t);
+            }
+        }
+    }
+
     // The reports screen, where the user can run reports or custom search
     public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
@@ -149,7 +164,7 @@ public class AccountingLedgerApp {
                 displayYearToDate(transactions);
             } else if (response == 4) {
                 // Previous year
-
+                displayPrevYear(transactions);
             } else if (response == 5) {
                 // Vendor name
 
