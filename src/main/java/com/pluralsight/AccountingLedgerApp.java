@@ -79,7 +79,7 @@ public class AccountingLedgerApp {
     // Display every transaction that is from the 1st of the current month
     public static void displayMonthToDate(ArrayList<Transaction> transactions) {
         System.out.println();
-        System.out.println("[CURRENT MONTH TRANSACTIONS]");
+        System.out.println("[CURRENT MONTH]");
 
         LocalDate today = LocalDate.now();
 
@@ -94,13 +94,28 @@ public class AccountingLedgerApp {
     // Display every transaction from the previous month
     public static void displayPrevMonth(ArrayList<Transaction> transactions) {
         System.out.println();
-        System.out.println("[PREVIOUS MONTH TRANSACTIONS]");
+        System.out.println("[PREVIOUS MONTH]");
 
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
 
         for (Transaction t : transactions) {
             LocalDate date = t.getDate();
             if (date.getYear() == lastMonth.getYear() && date.getMonth() == lastMonth.getMonth()) {
+                System.out.println(t);
+            }
+        }
+    }
+
+    // Display every transaction from the current year
+    public static void displayYearToDate(ArrayList<Transaction> transactions) {
+        System.out.println();
+        System.out.println("[YEAR TO DATE]");
+
+        int currentYear = LocalDate.now().getYear();
+
+        for (Transaction t : transactions) {
+            int transactionYear = t.getDate().getYear();
+            if (transactionYear == currentYear) {
                 System.out.println(t);
             }
         }
@@ -131,7 +146,7 @@ public class AccountingLedgerApp {
                 displayPrevMonth(transactions);
             } else if (response == 3) {
                 // Year to date
-
+                displayYearToDate(transactions);
             } else if (response == 4) {
                 // Previous year
 
