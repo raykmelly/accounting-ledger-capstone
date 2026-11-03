@@ -136,6 +136,22 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Prompt user to enter vendor name, displays all transactions from them
+    public static void searchByVendor(Scanner scanner, ArrayList<Transaction> transactions) {
+        System.out.println();
+        System.out.println("[VENDOR SEARCH]");
+        System.out.println("-> Enter vendor name to display all their transactions: ");
+        String response = scanner.nextLine();
+
+        for (Transaction t : transactions) {
+            String vendor = t.getVendor();
+            if (vendor.equalsIgnoreCase(response)) {
+                // Found vendor in search
+                System.out.println(t);
+            }
+        }
+    }
+
     // The reports screen, where the user can run reports or custom search
     public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
@@ -166,8 +182,8 @@ public class AccountingLedgerApp {
                 // Previous year
                 displayPrevYear(transactions);
             } else if (response == 5) {
-                // Vendor name
-
+                // Search by vendor name
+                searchByVendor(scanner,transactions);
             } else if (response == 0) {
                 // Go back to ledger screen
                 running = false;
