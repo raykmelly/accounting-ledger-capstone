@@ -304,7 +304,7 @@ public class AccountingLedgerApp {
         String transactionLine = formattedDateTime + "|" +
                 desc + "|" +
                 vendor + "|" +
-                String.valueOf(amount);
+                amount;
 
         // Add to transactions ArrayList<>();
         transactions.add(Transaction.fromCsvLine(transactionLine));
