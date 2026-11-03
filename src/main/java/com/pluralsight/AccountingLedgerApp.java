@@ -45,16 +45,11 @@ public class AccountingLedgerApp {
     }
 
     // Displays every entry inside of transactions.csv
-    public static void displayAllEntries() {
+    public static void displayAllEntries(ArrayList<Transaction> transactions) {
         System.out.println();
         System.out.println("[ALL TRANSACTION INFO]");
-        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
+        for (Transaction t : transactions) {
+            System.out.println(t);
         }
     }
 
