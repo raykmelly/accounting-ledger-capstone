@@ -34,7 +34,7 @@ public class Transaction {
         return date + "|" + time + "|" + desc + "|" + vendor + "|" + amount;
     }
 
-    // Make it so when I print the object itself, the .csv line is given
+    // Make it so when I print the object itself, the .csv line as a string is given
     @Override
     public String toString() {
         return toCsvLine();
