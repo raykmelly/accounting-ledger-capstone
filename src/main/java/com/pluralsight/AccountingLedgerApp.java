@@ -54,45 +54,29 @@ public class AccountingLedgerApp {
     }
 
     // Displays all the deposit entries in transactions.csv
-    public static void displayDeposits() {
+    public static void displayDeposits(ArrayList<Transaction> transactions) {
         System.out.println();
         System.out.println("[DEPOSIT TRANSACTION INFO]");
-        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] split = line.split("\\|");
-                double amount = Double.parseDouble(split[4]);
-                if (amount > 0) {
-                    // Amount is positive, MUST be a deposit
-                    System.out.println(line);
-                }
+        for (Transaction t : transactions) {
+            if (t.getAmount() > 0) { // Amount is positive, MUST be a deposit
+                System.out.println(t);
             }
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
         }
     }
 
     // Displays all the payments / debit entries in transactions.csv
-    public static void displayPayments() {
+    public static void displayPayments(ArrayList<Transaction> transactions) {
         System.out.println();
         System.out.println("[PAYMENT TRANSACTION INFO]");
-        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] split = line.split("\\|");
-                double amount = Double.parseDouble(split[4]);
-                if (amount < 0) {
-                    // Amount is negative, MUST be a debit / payment
-                    System.out.println(line);
-                }
+        for (Transaction t : transactions) {
+            if (t.getAmount() < 0) { // Amount is negative, MUST be a debit / payment
+                System.out.println(t);
             }
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
         }
     }
 
     // The reports screen, where the user can run reports or custom search
-    public static void reportsScreen(Scanner scanner) {
+    public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
             System.out.println();
@@ -150,16 +134,16 @@ public class AccountingLedgerApp {
 
             if (response.equalsIgnoreCase("A")) {
                 // Display all entries
-                displayAllEntries();
+                displayAllEntries(transactions);
             } else if (response.equalsIgnoreCase("D")) {
                 // Display deposit entries
-                displayDeposits();
+                displayDeposits(transactions);
             } else if (response.equalsIgnoreCase("P")) {
                 // Display payment entries
-                displayPayments();
+                displayPayments(transactions);
             } else if (response.equalsIgnoreCase("R")) {
                 // Go to reports screen
-                reportsScreen(scanner);
+                reportsScreen(scanner,transactions);
             } else if (response.equalsIgnoreCase("H")) {
                 // Go back to home screen
                 running = false;
