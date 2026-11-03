@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -36,6 +37,10 @@ public class AccountingLedgerApp {
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
         }
+        // Sort the list from newest to oldest
+        list.sort(Comparator.comparing(Transaction::getDate)
+                .thenComparing(Transaction::getTime)
+                .reversed());
         return list;
     }
 
@@ -134,7 +139,7 @@ public class AccountingLedgerApp {
     }
 
     // Loads the ledger screen until you choose to go to the home screen
-    public static void ledgerScreen(Scanner scanner) {
+    public static void ledgerScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
             System.out.println();
@@ -276,13 +281,13 @@ public class AccountingLedgerApp {
             String response = scanner.nextLine().trim();
             if (response.equalsIgnoreCase("D")) {
                 // Add a deposit
-                addDeposit(scanner, ArrayList<Transaction> transactions);
+                addDeposit(scanner,transactions);
             } else if (response.equalsIgnoreCase("P")) {
                 // Make payment (debit)
-                addDebit(scanner, ArrayList<Transaction> transactions);
+                addDebit(scanner,transactions);
             } else if (response.equalsIgnoreCase("L")) {
                 // Display ledger
-                ledgerScreen(scanner);
+                ledgerScreen(scanner,transactions);
             } else if (response.equalsIgnoreCase("X")) {
                 // Exit program
                 appRunning = false;
