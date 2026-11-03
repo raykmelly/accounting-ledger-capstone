@@ -172,7 +172,7 @@ public class AccountingLedgerApp {
     }
 
     // Adds a debit (-) to the transactions.csv
-    public static void addDebit(Scanner scanner) {
+    public static void addDebit(Scanner scanner, ArrayList<Transaction> transactions) {
         // Prompt user to create debit entry in transactions.csv
         System.out.println();
         System.out.println("[ADD DEBIT]");
@@ -199,11 +199,11 @@ public class AccountingLedgerApp {
 
         scanner.nextLine();
         // Write deposit into transactions.csv
-        writeTransaction(desc,vendor,amount);
+        writeTransaction(transactions,desc,vendor,amount);
     }
 
     // Adds a deposit (+) to transactions.csv
-    public static void addDeposit(Scanner scanner) {
+    public static void addDeposit(Scanner scanner, ArrayList<Transaction> transactions) {
         // Prompt user to create deposit entry in transactions.csv
         System.out.println();
         System.out.println("[ADD DEPOSIT]");
@@ -230,11 +230,11 @@ public class AccountingLedgerApp {
 
         scanner.nextLine();
         // Write deposit into transactions.csv
-        writeTransaction(desc,vendor,amount);
+        writeTransaction(transactions,desc,vendor,amount);
     }
 
     // Writes to the transactions.csv file
-    public static void writeTransaction(String desc, String vendor, double amount) {
+    public static void writeTransaction(ArrayList<Transaction> transactions, String desc, String vendor, double amount) {
         // Create the string that will be appended to the transactions.csv file
         System.out.println("-> Adding to transactions.csv");
         LocalDateTime dateTime = LocalDateTime.now();
@@ -245,6 +245,9 @@ public class AccountingLedgerApp {
                 desc + "|" +
                 vendor + "|" +
                 String.valueOf(amount);
+
+        // Add to transactions ArrayList<>();
+        transactions.add(Transaction.fromCsvLine(transactionLine));
 
         // Append to the transactions.csv file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv",true))) {
@@ -273,10 +276,10 @@ public class AccountingLedgerApp {
             String response = scanner.nextLine().trim();
             if (response.equalsIgnoreCase("D")) {
                 // Add a deposit
-                addDeposit(scanner);
+                addDeposit(scanner, ArrayList<Transaction> transactions);
             } else if (response.equalsIgnoreCase("P")) {
                 // Make payment (debit)
-                addDebit(scanner);
+                addDebit(scanner, ArrayList<Transaction> transactions);
             } else if (response.equalsIgnoreCase("L")) {
                 // Display ledger
                 ledgerScreen(scanner);
