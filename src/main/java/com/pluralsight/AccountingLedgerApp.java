@@ -3,6 +3,8 @@ package com.pluralsight;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class AccountingLedgerApp {
@@ -10,10 +12,31 @@ public class AccountingLedgerApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        // Load existing transactions from .csv file and create a list
+        ArrayList<Transaction> transactions = loadTransactions();
+
         // Starts the app loop. Goes on until you exit from the home screen
-        homeScreen(scanner);
+        homeScreen(scanner,transactions);
 
         scanner.close();
+    }
+
+    // Loads all the existing transactions from transactions.csv into ArrayList<>();
+    public static ArrayList<Transaction> loadTransactions() {
+        ArrayList<Transaction> list = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Catch any blank lines that would error the code
+                if (line.isBlank()) continue;
+                // Create transaction object from the .csv line
+                // and add to the list
+                list.add(Transaction.fromCsvLine(line));
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+        return list;
     }
 
     // Displays every entry inside of transactions.csv
@@ -234,7 +257,7 @@ public class AccountingLedgerApp {
     }
 
     // Displays home screen info & get response
-    public static void homeScreen(Scanner scanner) {
+    public static void homeScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         // Main app loop, once it breaks the app is done
         boolean appRunning = true;
         while (appRunning) {

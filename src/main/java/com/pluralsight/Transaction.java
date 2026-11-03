@@ -1,15 +1,18 @@
 package com.pluralsight;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Transaction {
     // Instance variables
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private String desc;
     private String vendor;
     private double amount;
 
     // Constructor
-    public Transaction(String date, String time, String desc, String vendor, double amount) {
+    public Transaction(LocalDate date, LocalTime time, String desc, String vendor, double amount) {
         this.date = date;
         this.time = time;
         this.desc = desc;
@@ -17,20 +20,39 @@ public class Transaction {
         this.amount = amount;
     }
 
+    // Methods
+    public static Transaction fromCsvLine(String line) {
+        String[] p = line.split("\\|");
+        return new Transaction(
+                LocalDate.parse(p[0]),
+                LocalTime.parse(p[1]),
+                p[2], p[3],
+                Double.parseDouble(p[4]));
+    }
+
+    public String toCsvLine() {
+        return date + "|" + time + "|" + desc + "|" + vendor + "|" + amount;
+    }
+
+    @Override
+    public String toString() {
+        return toCsvLine();
+    }
+
     // Getters & setters
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
