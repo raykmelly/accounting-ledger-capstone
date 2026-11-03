@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -75,6 +76,36 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Display every transaction that is from the 1st of the current month
+    public static void displayMonthToDate(ArrayList<Transaction> transactions) {
+        System.out.println();
+        System.out.println("[CURRENT MONTH TRANSACTIONS]");
+
+        LocalDate today = LocalDate.now();
+
+        for (Transaction t : transactions) {
+            LocalDate date = t.getDate();
+            if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth()) {
+                System.out.println(t);
+            }
+        }
+    }
+
+    // Display every transaction from the previous month
+    public static void displayPrevMonth(ArrayList<Transaction> transactions) {
+        System.out.println();
+        System.out.println("[PREVIOUS MONTH TRANSACTIONS]");
+
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+
+        for (Transaction t : transactions) {
+            LocalDate date = t.getDate();
+            if (date.getYear() == lastMonth.getYear() && date.getMonth() == lastMonth.getMonth()) {
+                System.out.println(t);
+            }
+        }
+    }
+
     // The reports screen, where the user can run reports or custom search
     public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
@@ -94,10 +125,10 @@ public class AccountingLedgerApp {
 
             if (response == 1) {
                 // Month to date
-
+                displayMonthToDate(transactions);
             } else if (response == 2) {
                 // Previous month
-
+                displayPrevMonth(transactions);
             } else if (response == 3) {
                 // Year to date
 
