@@ -248,8 +248,8 @@ public class AccountingLedgerApp {
             System.out.println("-> Enter amount (-): ");
             amount = scanner.nextDouble();
 
-            // Re-prompt if the user tries to have a negative value
-            // because deposits MUST be positive
+            // Re-prompt if the user tries to have a positive value
+            // because deposits MUST be negative
             if (amount > 0) {
                 System.out.println("Error: debit amount must be negative\n");
             } else {
