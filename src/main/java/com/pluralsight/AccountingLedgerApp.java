@@ -234,7 +234,7 @@ public class AccountingLedgerApp {
             for (Transaction t : transactions) {
                 // Check if there is a valid start date, and the transaction date is before it
                 if (startDate != null && t.getDate().isBefore(startDate)) continue;
-                // Check if there is a end date, and the transaction date is after it
+                // Check if there is an end date, and the transaction date is after it
                 if (endDate != null && t.getDate().isAfter(endDate)) continue;
                 /*
                     If the description isn't empty and the transaction desc has it inside.
@@ -287,7 +287,7 @@ public class AccountingLedgerApp {
             System.out.println("-> Choose an option: ");
             int response;
             try {
-                // Response is a int, we can continue
+                // Response is an int, we can continue
                 response = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 // Response is not an int, try again
@@ -376,7 +376,13 @@ public class AccountingLedgerApp {
         double amount;
         while (true) {
             System.out.println("-> Enter amount (-): ");
-            amount = scanner.nextDouble();
+            // Verify amount is actually a number, try again if not
+            try {
+                amount = Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a number");
+                continue;
+            }
 
             // Re-prompt if the user tries to have a positive value
             // because deposits MUST be negative
@@ -387,7 +393,6 @@ public class AccountingLedgerApp {
             }
         }
 
-        scanner.nextLine();
         // Write deposit into transactions.csv
         writeTransaction(transactions,desc,vendor,amount);
     }
@@ -407,7 +412,7 @@ public class AccountingLedgerApp {
         double amount;
         while (true) {
             System.out.println("-> Enter amount (+): ");
-            // Verify amount is actually a double, try again if not
+            // Verify amount is actually a number, try again if not
             try {
                 amount = Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
