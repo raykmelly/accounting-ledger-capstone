@@ -56,4 +56,8 @@ public class Transaction {
     public double getAmount() {
         return amount;
     }
+
+    public String getDesc() {
+        return desc;
+    }
 }

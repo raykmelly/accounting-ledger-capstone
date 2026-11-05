@@ -229,7 +229,20 @@ public class AccountingLedgerApp {
             }
 
             // Run the search with the filters
-
+            for (Transaction t : transactions) {
+                // Check if there is a valid start date, and the transaction date is before it
+                if (startDate != null && t.getDate().isBefore(startDate)) continue;
+                // Check if there is a end date, and the transaction date is after it
+                if (endDate != null && t.getDate().isAfter(endDate)) continue;
+                /*
+                    If the description isn't empty and the transaction desc has it inside.
+                    This allows the user to not have to type the entire desc, just stuff
+                    that can be found inside of it.
+                */
+                if (!desc.isEmpty() && !t.getDesc().toLowerCase().contains(desc.toLowerCase())) continue;
+                // If the vendor isn't empty and the transaction vendor is the same
+                if (!vendor.isEmpty() && !t.getVendor().equalsIgnoreCase(vendor)) continue;
+            }
 
         }
     }
