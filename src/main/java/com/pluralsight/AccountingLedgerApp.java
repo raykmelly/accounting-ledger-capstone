@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -151,6 +152,72 @@ public class AccountingLedgerApp {
         }
     }
 
+    public static void customSearch(Scanner scanner, ArrayList<Transaction> transactions) {
+        boolean running = true;
+        while (running) {
+            System.out.println();
+            System.out.println("[CUSTOM SEARCH SCREEN]");
+
+            // Prompt user for start date
+            LocalDate startDate = null;
+            while (true) {
+                System.out.println("-> Enter start date (YYYY-MM-DD): ");
+                String response = scanner.nextLine().trim();
+
+                if (response.isEmpty()) {
+                    // No response to this, skip in search
+                    break;
+                }
+
+                try {
+                    // Valid date format used
+                    startDate = LocalDate.parse(response);
+                    break;
+                } catch (DateTimeParseException e) {
+                    // Invalid date format used, try again.
+                    System.out.println("Error: invalid date format. Must be like (YYYY-MM-DD)");
+                }
+            }
+
+            // Prompt user for start date
+            LocalDate endDate = null;
+            while (true) {
+                System.out.println("-> Enter end date (YYYY-MM-DD): ");
+                String response = scanner.nextLine().trim();
+
+                if (response.isEmpty()) {
+                    // No response to this, skip in search
+                    break;
+                }
+
+                try {
+                    // Valid date format used
+                    endDate = LocalDate.parse(response);
+                    break;
+                } catch (DateTimeParseException e) {
+                    // Invalid date format used, try again.
+                    System.out.println("Error: invalid date format. Must be like (YYYY-MM-DD)");
+                }
+            }
+
+            // Prompt user for description
+            System.out.println("-> Enter description: ");
+            String desc = scanner.nextLine().trim();
+
+            // Prompt user for vendor
+            System.out.println("-> Enter the vendor: ");
+            String vendor = scanner.nextLine().trim();
+
+            // Prompt user for amount
+            double amount;
+            while (true) {
+                System.out.println("-> Enter the amount: ");
+                amount = scanner.nextDouble();
+            }
+
+        }
+    }
+
     // The reports screen, where the user can run reports or custom search
     public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
@@ -162,6 +229,7 @@ public class AccountingLedgerApp {
             System.out.println("3.) Year to date");
             System.out.println("4.) Previous year");
             System.out.println("5.) Search by vendor name");
+            System.out.println("6.) Custom search");
             System.out.println("0.) Back");
 
             System.out.println("-> Choose an option: ");
@@ -183,6 +251,9 @@ public class AccountingLedgerApp {
             } else if (response == 5) {
                 // Search by vendor name
                 searchByVendor(scanner,transactions);
+            } else if (response == 6) {
+                // Custom search
+                customSearch(scanner,transactions);
             } else if (response == 0) {
                 // Go back to ledger screen
                 running = false;
