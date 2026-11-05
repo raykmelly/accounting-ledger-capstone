@@ -157,6 +157,7 @@ public class AccountingLedgerApp {
         while (running) {
             System.out.println();
             System.out.println("[CUSTOM SEARCH SCREEN]");
+            System.out.println("TIP: Press [Enter] to skip the search filter");
 
             // Prompt user for start date
             LocalDate startDate = null;
@@ -209,11 +210,26 @@ public class AccountingLedgerApp {
             String vendor = scanner.nextLine().trim();
 
             // Prompt user for amount
-            double amount;
+            Double amount = null;
             while (true) {
                 System.out.println("-> Enter the amount: ");
-                amount = scanner.nextDouble();
+                String response = scanner.nextLine().trim();
+
+                if (response.isEmpty()) {
+                    // No response to this, skip in search
+                    break;
+                }
+
+                try {
+                    amount = Double.parseDouble(response);
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Please enter a number");
+                }
             }
+
+            // Run the search with the filters
+
 
         }
     }
