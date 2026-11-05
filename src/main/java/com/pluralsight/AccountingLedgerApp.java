@@ -12,10 +12,14 @@ import java.util.Scanner;
 public class AccountingLedgerApp {
     // Application main loop
     public static void main(String[] args) {
+        UserInterface.init();
         Scanner scanner = new Scanner(System.in);
 
         // Load existing transactions from .csv file and create a list
         ArrayList<Transaction> transactions = loadTransactions();
+
+        // Launch screen, waits for the user to press Enter
+        UserInterface.splash(scanner);
 
         // Starts the app loop. Goes on until you exit from the home screen
         homeScreen(scanner,transactions);
@@ -47,123 +51,112 @@ public class AccountingLedgerApp {
 
     // Displays every entry inside of transactions.csv
     public static void displayAllEntries(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[ALL TRANSACTION INFO]");
-        for (Transaction t : transactions) {
-            System.out.println(t);
-        }
+        UserInterface.transactions("All transactions", transactions);
     }
 
     // Displays all the deposit entries in transactions.csv
     public static void displayDeposits(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[DEPOSIT TRANSACTION INFO]");
+        ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
             if (t.getAmount() > 0) { // Amount is positive, MUST be a deposit
-                System.out.println(t);
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Deposits", matches);
     }
 
     // Displays all the payments / debit entries in transactions.csv
     public static void displayPayments(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[PAYMENT TRANSACTION INFO]");
+        ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
             if (t.getAmount() < 0) { // Amount is negative, MUST be a debit / payment
-                System.out.println(t);
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Payments", matches);
     }
 
     // Display every transaction that is from the 1st of the current month
     public static void displayMonthToDate(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[CURRENT MONTH]");
-
         LocalDate today = LocalDate.now();
+        ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
             LocalDate date = t.getDate();
             if (date.getYear() == today.getYear() && date.getMonth() == today.getMonth()) {
-                System.out.println(t);
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Month to date", matches);
     }
 
     // Display every transaction from the previous month
     public static void displayPrevMonth(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[PREVIOUS MONTH]");
-
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
             LocalDate date = t.getDate();
             if (date.getYear() == lastMonth.getYear() && date.getMonth() == lastMonth.getMonth()) {
-                System.out.println(t);
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Previous month", matches);
     }
 
     // Display every transaction from the current year
     public static void displayYearToDate(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[YEAR TO DATE]");
-
         int currentYear = LocalDate.now().getYear();
+        ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
-            int transactionYear = t.getDate().getYear();
-            if (transactionYear == currentYear) {
-                System.out.println(t);
+            if (t.getDate().getYear() == currentYear) {
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Year to date", matches);
     }
 
     // Display every transaction from the previous year
     public static void displayPrevYear(ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[PREVIOUS YEAR]");
-
         int prevYear = LocalDate.now().minusYears(1).getYear();
+        ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
-            int transactionYear = t.getDate().getYear();
-            if (transactionYear == prevYear) {
-                System.out.println(t);
+            if (t.getDate().getYear() == prevYear) {
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Previous year", matches);
     }
 
     // Prompt user to enter vendor name, displays all transactions from them
     public static void searchByVendor(Scanner scanner, ArrayList<Transaction> transactions) {
-        System.out.println();
-        System.out.println("[VENDOR SEARCH]");
-        System.out.println("-> Enter vendor name to display all their transactions: ");
-        String response = scanner.nextLine();
+        UserInterface.section("Vendor search");
+        UserInterface.prompt("Enter vendor name:");
+        String response = scanner.nextLine().trim();
 
+        ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
-            String vendor = t.getVendor();
-            if (vendor.equalsIgnoreCase(response)) {
+            if (t.getVendor().equalsIgnoreCase(response)) {
                 // Found vendor in search
-                System.out.println(t);
+                matches.add(t);
             }
         }
+        UserInterface.transactions("Vendor: " + response, matches);
     }
 
     // Does a custom search with filters the user can choose. You can also skip them by pressing enter.
     public static void customSearch(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
-            System.out.println();
-            System.out.println("[CUSTOM SEARCH SCREEN]");
-            System.out.println("TIP: Press [Enter] to skip the search filter");
+            UserInterface.section("Custom search");
+            UserInterface.hint("Press Enter to skip any filter");
 
             // Prompt user for start date
             LocalDate startDate = null;
             while (true) {
-                System.out.println("-> Enter start date (YYYY-MM-DD): ");
+                UserInterface.prompt("Start date (YYYY-MM-DD):");
                 String response = scanner.nextLine().trim();
 
                 if (response.isEmpty()) {
@@ -177,14 +170,14 @@ public class AccountingLedgerApp {
                     break;
                 } catch (DateTimeParseException e) {
                     // Invalid date format used, try again.
-                    System.out.println("Error: invalid date format. Must be like (YYYY-MM-DD)");
+                    UserInterface.error("Invalid date format. Must be like (YYYY-MM-DD)");
                 }
             }
 
             // Prompt user for end date
             LocalDate endDate = null;
             while (true) {
-                System.out.println("-> Enter end date (YYYY-MM-DD): ");
+                UserInterface.prompt("End date (YYYY-MM-DD):");
                 String response = scanner.nextLine().trim();
 
                 if (response.isEmpty()) {
@@ -198,22 +191,22 @@ public class AccountingLedgerApp {
                     break;
                 } catch (DateTimeParseException e) {
                     // Invalid date format used, try again.
-                    System.out.println("Error: invalid date format. Must be like (YYYY-MM-DD)");
+                    UserInterface.error("Invalid date format. Must be like (YYYY-MM-DD)");
                 }
             }
 
             // Prompt user for description
-            System.out.println("-> Enter description: ");
+            UserInterface.prompt("Description:");
             String desc = scanner.nextLine().trim();
 
             // Prompt user for vendor
-            System.out.println("-> Enter the vendor: ");
+            UserInterface.prompt("Vendor:");
             String vendor = scanner.nextLine().trim();
 
             // Prompt user for amount
             Double amount = null;
             while (true) {
-                System.out.println("-> Enter the amount: ");
+                UserInterface.prompt("Amount:");
                 String response = scanner.nextLine().trim();
 
                 if (response.isEmpty()) {
@@ -225,18 +218,18 @@ public class AccountingLedgerApp {
                     amount = Double.parseDouble(response);
                     break;
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Please enter a number");
+                    UserInterface.error("Please enter a number");
                 }
             }
 
             // Run the search with the filters.
             // If the transaction doesn't meet the filters standard we continue to the
-            // next transaction and don't print it.
-            int matches = 0;
+            // next transaction and don't keep it.
+            ArrayList<Transaction> matches = new ArrayList<>();
             for (Transaction t : transactions) {
-                // Check if there is a valid start date, and the transaction date is before it
+                // Skip if the transaction date is before the start date
                 if (startDate != null && t.getDate().isBefore(startDate)) continue;
-                // Check if there is an end date, and the transaction date is after it
+                // Skip if the transaction date is after the end date
                 if (endDate != null && t.getDate().isAfter(endDate)) continue;
                 /*
                     If the description isn't empty and the transaction desc has it inside.
@@ -249,18 +242,15 @@ public class AccountingLedgerApp {
                 // If amount isn't empty and the transaction value isn't the same
                 if (amount != null && t.getAmount() != amount) continue;
 
-                // Display the filtered result (congrats, you made it transaction!)
-                System.out.println(t);
-                matches ++;
+                // Made it through every filter, keep it (congrats, you made it transaction!)
+                matches.add(t);
             }
-
-            if (matches == 0) {
-                System.out.println("No matching transactions found.");
-            }
+            UserInterface.transactions("Search results", matches);
 
             // Loop to ask the user if they want to search again, or go back.
             while (true) {
-                System.out.println("\n-> Do you want to search again? (Y/N):");
+                System.out.println();
+                UserInterface.prompt("Search again? (Y/N):");
                 String response = scanner.nextLine().trim();
 
                 if (response.equalsIgnoreCase("Y") ) {
@@ -272,7 +262,7 @@ public class AccountingLedgerApp {
                     break;
                 } else {
                     // Invalid response
-                    System.out.println("Error: invalid response, try again");
+                    UserInterface.error("Invalid response, try again");
                 }
             }
         }
@@ -282,24 +272,23 @@ public class AccountingLedgerApp {
     public static void reportsScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
-            System.out.println();
-            System.out.println("[REPORTS SCREEN]");
-            System.out.println("1.) Month to date");
-            System.out.println("2.) Previous month");
-            System.out.println("3.) Year to date");
-            System.out.println("4.) Previous year");
-            System.out.println("5.) Search by vendor name");
-            System.out.println("6.) Custom search");
-            System.out.println("0.) Back");
+            UserInterface.menu("Reports",
+                    "1|Month to date",
+                    "2|Previous month",
+                    "3|Year to date",
+                    "4|Previous year",
+                    "5|Search by vendor",
+                    "6|Custom search",
+                    "0|Back");
+            UserInterface.prompt("Choose an option:");
 
-            System.out.println("-> Choose an option: ");
             int response;
             try {
                 // Response is an int, we can continue
                 response = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 // Response is not an int, try again
-                System.out.println("Error: Please enter a number");
+                UserInterface.error("Please enter a number");
                 continue;
             }
 
@@ -326,7 +315,7 @@ public class AccountingLedgerApp {
                 running = false;
             } else {
                 // Invalid input, try again
-                System.out.println("Error: Invalid input, try again");
+                UserInterface.error("Invalid input, try again");
             }
         }
     }
@@ -335,16 +324,15 @@ public class AccountingLedgerApp {
     public static void ledgerScreen(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
-            System.out.println();
-            System.out.println("[LEDGER SCREEN]");
-            System.out.println("A.) Display all entries");
-            System.out.println("D.) Display deposits (+)");
-            System.out.println("P.) Display payments (-)");
-            System.out.println("R.) Reports");
-            System.out.println("H.) Home");
+            UserInterface.menu("Ledger",
+                    "A|All entries",
+                    "D|Deposits (+)",
+                    "P|Payments (-)",
+                    "R|Reports",
+                    "H|Home");
+            UserInterface.prompt("Choose an option:");
 
-            System.out.println("-> Choose an option: ");
-            String response = scanner.nextLine();
+            String response = scanner.nextLine().trim();
 
             if (response.equalsIgnoreCase("A")) {
                 // Display all entries
@@ -363,8 +351,7 @@ public class AccountingLedgerApp {
                 running = false;
             } else {
                 // Invalid input, try again
-                System.out.println("Error: Invalid input, try again");
-                System.out.println("You entered: '" + response + "'");
+                UserInterface.error("Invalid input, try again (you entered '" + response + "')");
             }
         }
     }
@@ -372,66 +359,64 @@ public class AccountingLedgerApp {
     // Adds a debit (-) to the transactions.csv
     public static void addDebit(Scanner scanner, ArrayList<Transaction> transactions) {
         // Prompt user to create debit entry in transactions.csv
-        System.out.println();
-        System.out.println("[ADD DEBIT]");
+        UserInterface.section("Make a payment");
 
-        System.out.println("-> Enter deposit description: ");
+        UserInterface.prompt("Payment description:");
         String desc = scanner.nextLine().trim();
 
-        System.out.println("-> Enter vendor: ");
+        UserInterface.prompt("Vendor:");
         String vendor = scanner.nextLine().trim();
 
         double amount;
         while (true) {
-            System.out.println("-> Enter amount (-): ");
+            UserInterface.prompt("Amount (negative, e.g. -25.00):");
             // Verify amount is actually a number, try again if not
             try {
                 amount = Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Error: Please enter a number");
+                UserInterface.error("Please enter a number");
                 continue;
             }
 
             // Re-prompt if the user tries to have a positive value
-            // because deposits MUST be negative
+            // because debits MUST be negative
             if (amount > 0) {
-                System.out.println("Error: debit amount must be negative\n");
+                UserInterface.error("Payment amount must be negative");
             } else {
                 break;
             }
         }
 
-        // Write deposit into transactions.csv
+        // Write debit into transactions.csv
         writeTransaction(transactions,desc,vendor,amount);
     }
 
     // Adds a deposit (+) to transactions.csv
     public static void addDeposit(Scanner scanner, ArrayList<Transaction> transactions) {
         // Prompt user to create deposit entry in transactions.csv
-        System.out.println();
-        System.out.println("[ADD DEPOSIT]");
+        UserInterface.section("Add a deposit");
 
-        System.out.println("-> Enter deposit description: ");
+        UserInterface.prompt("Deposit description:");
         String desc = scanner.nextLine().trim();
 
-        System.out.println("-> Enter vendor: ");
+        UserInterface.prompt("Vendor:");
         String vendor = scanner.nextLine().trim();
 
         double amount;
         while (true) {
-            System.out.println("-> Enter amount (+): ");
+            UserInterface.prompt("Amount (positive, e.g. 100.00):");
             // Verify amount is actually a number, try again if not
             try {
                 amount = Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Error: Please enter a number");
+                UserInterface.error("Please enter a number");
                 continue;
             }
 
             // Re-prompt if the user tries to have a negative value
             // because deposits MUST be positive
             if (amount < 0) {
-                System.out.println("Error: deposit amount must be positive");
+                UserInterface.error("Deposit amount must be positive");
             } else {
                 break;
             }
@@ -444,7 +429,6 @@ public class AccountingLedgerApp {
     // Writes to the transactions.csv file
     public static void writeTransaction(ArrayList<Transaction> transactions, String desc, String vendor, double amount) {
         // Create the string that will be appended to the transactions.csv file
-        System.out.println("-> Adding to transactions.csv");
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss");
         String formattedDateTime = dateTime.format(formatter);
@@ -454,17 +438,17 @@ public class AccountingLedgerApp {
                 vendor + "|" +
                 amount;
 
-        // Add to transactions ArrayList<>();
-        transactions.add(Transaction.fromCsvLine(transactionLine));
+        // Add to the front of the transactions ArrayList<>(); so it stays newest first
+        transactions.add(0, Transaction.fromCsvLine(transactionLine));
 
         // Append to the transactions.csv file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv",true))) {
             writer.write(transactionLine);
             writer.newLine();
+            UserInterface.success("Saved to transactions.csv");
         } catch (IOException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
+            UserInterface.error("Could not write to file: " + e.getMessage());
         }
-        System.out.println();
     }
 
     // Displays home screen info & get response
@@ -473,13 +457,12 @@ public class AccountingLedgerApp {
         boolean appRunning = true;
         while (appRunning) {
             // Display the home screen options and get a response
-            System.out.println();
-            System.out.println("[HOME SCREEN]");
-            System.out.println("D.) Add deposit");
-            System.out.println("P.) Make payment (debit)");
-            System.out.println("L.) Display ledger");
-            System.out.println("X.) Exit");
-            System.out.println("-> Choose an option: ");
+            UserInterface.menu("Home",
+                    "D|Add deposit",
+                    "P|Make payment (debit)",
+                    "L|Display ledger",
+                    "X|Exit");
+            UserInterface.prompt("Choose an option:");
 
             String response = scanner.nextLine().trim();
             if (response.equalsIgnoreCase("D")) {
@@ -496,7 +479,7 @@ public class AccountingLedgerApp {
                 appRunning = false;
             } else {
                 // Invalid input
-                System.out.println("-> Invalid input, please try again");
+                UserInterface.error("Invalid input, please try again");
             }
         }
     }
