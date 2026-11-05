@@ -56,6 +56,7 @@ public class AccountingLedgerApp {
 
     // Displays all the deposit entries in transactions.csv
     public static void displayDeposits(ArrayList<Transaction> transactions) {
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
             if (t.getAmount() > 0) { // Amount is positive, MUST be a deposit
@@ -67,6 +68,7 @@ public class AccountingLedgerApp {
 
     // Displays all the payments / debit entries in transactions.csv
     public static void displayPayments(ArrayList<Transaction> transactions) {
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
             if (t.getAmount() < 0) { // Amount is negative, MUST be a debit / payment
@@ -79,6 +81,7 @@ public class AccountingLedgerApp {
     // Display every transaction that is from the 1st of the current month
     public static void displayMonthToDate(ArrayList<Transaction> transactions) {
         LocalDate today = LocalDate.now();
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
@@ -93,6 +96,7 @@ public class AccountingLedgerApp {
     // Display every transaction from the previous month
     public static void displayPrevMonth(ArrayList<Transaction> transactions) {
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
@@ -107,6 +111,7 @@ public class AccountingLedgerApp {
     // Display every transaction from the current year
     public static void displayYearToDate(ArrayList<Transaction> transactions) {
         int currentYear = LocalDate.now().getYear();
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
@@ -120,6 +125,7 @@ public class AccountingLedgerApp {
     // Display every transaction from the previous year
     public static void displayPrevYear(ArrayList<Transaction> transactions) {
         int prevYear = LocalDate.now().minusYears(1).getYear();
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
 
         for (Transaction t : transactions) {
@@ -136,6 +142,7 @@ public class AccountingLedgerApp {
         UserInterface.prompt("Enter vendor name:");
         String response = scanner.nextLine().trim();
 
+        // Create a list of all the matches so UserInterface can display them as one page
         ArrayList<Transaction> matches = new ArrayList<>();
         for (Transaction t : transactions) {
             if (t.getVendor().equalsIgnoreCase(response)) {
