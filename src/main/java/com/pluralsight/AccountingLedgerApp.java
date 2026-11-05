@@ -245,6 +245,7 @@ public class AccountingLedgerApp {
                 if (!desc.isEmpty() && !t.getDesc().toLowerCase().contains(desc.toLowerCase())) continue;
                 // If the vendor isn't empty and the transaction vendor is the same
                 if (!vendor.isEmpty() && !t.getVendor().equalsIgnoreCase(vendor)) continue;
+                // If amount isn't empty and the transaction value isn't the same
                 if (amount != null && t.getAmount() != amount) continue;
 
                 // Display the filtered result (congrats, you made it transaction!)
