@@ -152,6 +152,7 @@ public class AccountingLedgerApp {
         }
     }
 
+    // Does a custom search with filters the user can choose. You can also skip them by pressing enter.
     public static void customSearch(Scanner scanner, ArrayList<Transaction> transactions) {
         boolean running = true;
         while (running) {
