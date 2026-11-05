@@ -228,7 +228,9 @@ public class AccountingLedgerApp {
                 }
             }
 
-            // Run the search with the filters
+            // Run the search with the filters.
+            // If the transaction doesn't meet the filters standard we continue to the
+            // next transaction and don't print it.
             for (Transaction t : transactions) {
                 // Check if there is a valid start date, and the transaction date is before it
                 if (startDate != null && t.getDate().isBefore(startDate)) continue;
@@ -242,6 +244,28 @@ public class AccountingLedgerApp {
                 if (!desc.isEmpty() && !t.getDesc().toLowerCase().contains(desc.toLowerCase())) continue;
                 // If the vendor isn't empty and the transaction vendor is the same
                 if (!vendor.isEmpty() && !t.getVendor().equalsIgnoreCase(vendor)) continue;
+                if (amount != null && t.getAmount() != amount) continue;
+
+                // Display the filtered result (congrats, you made it transaction!)
+                System.out.println(t);
+            }
+
+
+            while (true) {
+                System.out.println("\n-> Do you want to search again? (Y/N):");
+                String response = scanner.nextLine().trim();
+
+                if (response.equalsIgnoreCase("Y") ) {
+                    // Accept, go through loop again
+                    break;
+                } else if (response.equalsIgnoreCase("N")) {
+                    // Decline, stop running loop and go back a screen
+                    running = false;
+                    break;
+                } else {
+                    // Invalid response
+                    System.out.println("Error: invalid response, try again");
+                }
             }
 
         }
