@@ -180,7 +180,7 @@ public class AccountingLedgerApp {
                 }
             }
 
-            // Prompt user for start date
+            // Prompt user for end date
             LocalDate endDate = null;
             while (true) {
                 System.out.println("-> Enter end date (YYYY-MM-DD): ");
@@ -250,7 +250,7 @@ public class AccountingLedgerApp {
                 System.out.println(t);
             }
 
-
+            // Loop to ask the user if they want to search again, or go back.
             while (true) {
                 System.out.println("\n-> Do you want to search again? (Y/N):");
                 String response = scanner.nextLine().trim();
@@ -267,7 +267,6 @@ public class AccountingLedgerApp {
                     System.out.println("Error: invalid response, try again");
                 }
             }
-
         }
     }
 
@@ -286,8 +285,15 @@ public class AccountingLedgerApp {
             System.out.println("0.) Back");
 
             System.out.println("-> Choose an option: ");
-            int response = scanner.nextInt();
-            scanner.nextLine();
+            int response;
+            try {
+                // Response is a int, we can continue
+                response = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                // Response is not an int, try again
+                System.out.println("Error: Please enter a number");
+                continue;
+            }
 
             if (response == 1) {
                 // Month to date
@@ -401,7 +407,13 @@ public class AccountingLedgerApp {
         double amount;
         while (true) {
             System.out.println("-> Enter amount (+): ");
-            amount = scanner.nextDouble();
+            // Verify amount is actually a double, try again if not
+            try {
+                amount = Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a number");
+                continue;
+            }
 
             // Re-prompt if the user tries to have a negative value
             // because deposits MUST be positive
@@ -412,7 +424,6 @@ public class AccountingLedgerApp {
             }
         }
 
-        scanner.nextLine();
         // Write deposit into transactions.csv
         writeTransaction(transactions,desc,vendor,amount);
     }
