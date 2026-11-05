@@ -232,6 +232,7 @@ public class AccountingLedgerApp {
             // Run the search with the filters.
             // If the transaction doesn't meet the filters standard we continue to the
             // next transaction and don't print it.
+            int matches = 0;
             for (Transaction t : transactions) {
                 // Check if there is a valid start date, and the transaction date is before it
                 if (startDate != null && t.getDate().isBefore(startDate)) continue;
@@ -250,6 +251,11 @@ public class AccountingLedgerApp {
 
                 // Display the filtered result (congrats, you made it transaction!)
                 System.out.println(t);
+                matches ++;
+            }
+
+            if (matches == 0) {
+                System.out.println("No matching transactions found.");
             }
 
             // Loop to ask the user if they want to search again, or go back.
