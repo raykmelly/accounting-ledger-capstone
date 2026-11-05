@@ -22,6 +22,7 @@ public class UserInterface {
 
     // Call once at the start of main so box characters display correctly on Windows
     public static void init() {
+        // Makes sure the characters being printed are in UTF_8 and not the default.
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
     }
 
